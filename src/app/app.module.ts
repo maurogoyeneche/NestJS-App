@@ -3,15 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MovieModule } from 'src/movie/movie.module';
 import { HttpModule } from '@nestjs/axios';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     HttpModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://gnoboca:42180329Gnoboc@cluster0.vy7ivdw.mongodb.net/MovieNest',
-    ),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.DB_URL),
     MovieModule,
     AuthModule,
   ],
