@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { User } from 'src/models/user.models';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
 import {
+  Injectable,
   BadRequestException,
   NotFoundException,
   UnauthorizedException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { User } from 'src/models/user.models';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { hashPassword, comparePassword } from 'src/utils/utils';
+import { UserResponse } from './dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,12 +18,18 @@ export class AuthService {
   async SignUp(body) {
     try {
       const { email, password, name } = body;
+      const hashedPassword = await hashPassword(password);
+      const userFound = await this.userModel.findOne({ email });
+      if (userFound) {
+        throw new UnauthorizedException('Email already exist');
+      }
       const userCreated = await this.userModel.create({
         name,
         email,
-        password,
+        password: hashedPassword,
       });
-      return userCreated;
+      const userDto = new UserResponse(userCreated);
+      return userDto;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -34,7 +42,8 @@ export class AuthService {
       if (!userFounded) {
         throw new NotFoundException('User not found');
       }
-      if (!(userFounded.password === password)) {
+      const isMatch = await comparePassword(password, userFounded.password);
+      if (!isMatch) {
         throw new UnauthorizedException();
       }
       return { message: 'User logged successfully' };

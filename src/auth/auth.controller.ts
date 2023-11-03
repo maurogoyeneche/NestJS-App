@@ -10,7 +10,7 @@ export class AuthController {
   async Signup(@Body() body: CreateUserDto, @Res() res) {
     try {
       const result = await this.authService.SignUp(body);
-      res.status(200).json({ data: result });
+      res.status(200).json({ message: 'SignUp successfully', data: result });
     } catch (error) {
       res.status(error.status).json({ message: error.message });
     }
