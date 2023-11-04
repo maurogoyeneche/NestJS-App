@@ -10,10 +10,14 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hashPassword, comparePassword } from 'src/utils/utils';
 import { UserResponse } from './dto/user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private jwt: JwtService,
+  ) {}
 
   async SignUp(body) {
     try {
@@ -46,7 +50,13 @@ export class AuthService {
       if (!isMatch) {
         throw new UnauthorizedException();
       }
-      return { message: 'User logged successfully' };
+      const payload = { id: userFounded._id, name: userFounded.name };
+      const token = this.jwt.sign(payload);
+      const data = {
+        userFounded,
+        token,
+      };
+      return { message: 'User logged successfully', data };
     } catch (error) {
       throw new InternalServerErrorException('Authentication failed');
     }

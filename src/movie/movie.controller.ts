@@ -7,11 +7,14 @@ import {
   Res,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie-dto';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('movie')
 export class MovieController {
   constructor(private movieService: MovieService) {}
