@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Movie } from './movie.schema';
+import { Movie } from '../models/movie.schema';
 import {
   BadRequestException,
   NotFoundException,
