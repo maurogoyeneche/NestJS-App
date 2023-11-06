@@ -12,9 +12,10 @@ import {
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie-dto';
 import { Response } from 'express';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard)
 @Controller('movie')
 export class MovieController {
   constructor(private movieService: MovieService) {}

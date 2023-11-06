@@ -5,6 +5,7 @@ import { MovieService } from './movie.service';
 import { MovieSchema, Movie } from '../models/movie.schema';
 import { APP_PIPE, APP_INTERCEPTOR } from '@nestjs/core';
 import { ClassSerializerInterceptor } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
   controllers: [MovieController],
   providers: [
     MovieService,
+    JwtService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,

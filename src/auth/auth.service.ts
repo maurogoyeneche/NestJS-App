@@ -8,7 +8,7 @@ import {
 import { User } from 'src/models/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { hashPassword, comparePassword } from 'src/utils/utils';
+import { hashPassword, comparePassword } from 'src/utils/bcrypt-passwords';
 import { UserResponse } from './dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 // import { Role } from 'src/models/role.schema';
@@ -40,24 +40,21 @@ export class AuthService {
 
   async SignUp(body) {
     try {
-      const { email, password, name, role } = body;
+      const { name, email, password, role } = body;
       const hashedPassword = await hashPassword(password);
       const userFound = await this.userModel.findOne({ email });
       if (userFound) {
         throw new UnauthorizedException('Email already exist');
       }
-
       if (role && role !== 'admin' && role !== 'moderator' && role !== 'user') {
         throw new BadRequestException('Invalid role');
       }
-
       const userCreated = await this.userModel.create({
         name,
         email,
         password: hashedPassword,
         role: role ? { name: role } : undefined,
       });
-
       const userDto = new UserResponse(userCreated);
       return userDto;
     } catch (error) {
@@ -76,7 +73,11 @@ export class AuthService {
       if (!isMatch) {
         throw new UnauthorizedException();
       }
-      const payload = { id: userFounded._id, name: userFounded.name };
+      const payload = {
+        id: userFounded._id,
+        name: userFounded.name,
+        role: userFounded.role,
+      };
       const token = this.jwt.sign(payload);
       const data = {
         userFounded,
