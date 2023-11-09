@@ -6,6 +6,8 @@ import { MovieSchema, Movie } from '../models/movie.schema';
 import { APP_PIPE, APP_INTERCEPTOR } from '@nestjs/core';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { JwtService } from '@nestjs/jwt';
   providers: [
     MovieService,
     JwtService,
+    AuthGuard,
+    RolesGuard,
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,

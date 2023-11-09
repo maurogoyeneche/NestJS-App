@@ -74,9 +74,8 @@ export class AuthService {
         throw new UnauthorizedException();
       }
       const payload = {
-        id: userFounded._id,
         name: userFounded.name,
-        role: userFounded.role,
+        role: userFounded.role.name,
       };
       const token = this.jwt.sign(payload);
       const data = {
