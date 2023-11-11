@@ -7,16 +7,17 @@ import {
   Res,
   Delete,
   Put,
-  UseGuards,
   Req,
+  // UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie-dto';
 import { Response } from 'express';
-// import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/enums/role.enum';
+// import { Roles } from 'src/auth/decorators/roles.decorator';
+// import { AuthGuard } from 'src/auth/guards/auth.guard';
+// import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Auth } from 'src/auth/decorators/auth.decorator';
 
 interface UserRequest extends Request {
   user: {
@@ -29,8 +30,7 @@ interface UserRequest extends Request {
 export class MovieController {
   constructor(private movieService: MovieService) {}
 
-  @Roles('admin')
-  @UseGuards(AuthGuard, RolesGuard)
+  @Auth(Role.ADMIN)
   @Get()
   async getAllMovies(@Req() req: UserRequest, @Res() res: Response) {
     try {
