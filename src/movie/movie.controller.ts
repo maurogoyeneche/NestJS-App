@@ -30,7 +30,7 @@ interface UserRequest extends Request {
 export class MovieController {
   constructor(private movieService: MovieService) {}
 
-  @Auth(Role.ADMIN)
+  @Auth([Role.ADMIN, Role.USER])
   @Get()
   async getAllMovies(@Req() req: UserRequest, @Res() res: Response) {
     try {
