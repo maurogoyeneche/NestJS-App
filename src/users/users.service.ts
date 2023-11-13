@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from 'src/models/user.schema';
-import { SignUp } from 'src/auth/dto/user.dto';
+import { User } from 'src/users/models/user.schema';
+import { SignUp } from 'src/auth/dto/auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role.name,
+        role: user.role,
       }));
     } catch (error) {
       throw new BadRequestException('Error while fetching users');
@@ -37,7 +37,7 @@ export class UsersService {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role.name,
+        role: user.role,
       };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -59,7 +59,7 @@ export class UsersService {
           id: userAdded._id,
           name: userAdded.name,
           email: userAdded.email,
-          role: userAdded.role.name,
+          role: userAdded.role,
         },
       };
     } catch (error) {

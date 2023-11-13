@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Matches, IsString } from 'class-validator';
 // import { Exclude } from 'class-transformer';
 // import { User } from 'src/models/user.schema';
-import { Role } from 'src/models/role.schema';
+import { Role } from '../../common/enums/role.enum';
 
 export class Login {
   @IsString()

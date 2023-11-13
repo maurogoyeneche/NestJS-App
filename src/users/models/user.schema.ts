@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { RoleSchema, Role } from './role.schema';
+import { Role } from 'src/common/enums/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -15,7 +15,7 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: RoleSchema, default: { name: 'user' } }) // Establece una referencia al esquema de Role
+  @Prop({ type: String, enum: Role, default: Role.USER }) // Establece una referencia al esquema de Role
   role: Role;
 }
 

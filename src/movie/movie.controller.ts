@@ -12,8 +12,8 @@ import {
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie-dto';
 import { Response } from 'express';
-import { Role } from 'src/auth/enums/role.enum';
-import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/common/enums/role.enum';
+import { Auth } from 'src/common/decorators/auth.decorator';
 import { UserRequest } from 'src/common/interfaces/user.interfaces';
 
 @Controller('movie')

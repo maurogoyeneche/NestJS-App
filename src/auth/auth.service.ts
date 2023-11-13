@@ -5,11 +5,11 @@ import {
   UnauthorizedException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { User } from 'src/models/user.schema';
+import { User } from 'src/users/models/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hashPassword, comparePassword } from 'src/utils/bcrypt-passwords';
-import { Login, SignUp } from './dto/user.dto';
+import { Login, SignUp } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class AuthService {
         name,
         email,
         password: hashedPassword,
-        role: role ? { name: role } : undefined,
+        role,
       });
       return { message: 'User created successfully' };
     } catch (error) {
@@ -52,7 +52,7 @@ export class AuthService {
       }
       const payload = {
         name: userFounded.name,
-        role: userFounded.role.name,
+        role: userFounded.role,
       };
       const token = this.jwt.sign(payload);
       return { message: `Logged successfully, ${userFounded.name}`, token };

@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response } from 'express';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { Role } from 'src/auth/enums/role.enum';
+import { Auth } from 'src/common/decorators/auth.decorator';
+import { Role } from 'src/common/enums/role.enum';
 import { UserRequest } from 'src/common/interfaces/user.interfaces';
 
 @Controller('users')
