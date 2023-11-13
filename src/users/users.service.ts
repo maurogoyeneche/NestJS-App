@@ -16,7 +16,12 @@ export class UsersService {
   async getUsers() {
     try {
       const users = await this.userModel.find().exec();
-      return users;
+      return users.map((user) => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role.name,
+      }));
     } catch (error) {
       throw new BadRequestException('Error while fetching users');
     }
@@ -24,11 +29,16 @@ export class UsersService {
 
   async getUserById(id: string) {
     try {
-      const movie = await this.userModel.findById(id).lean();
-      if (!movie) {
+      const user = await this.userModel.findById(id).lean();
+      if (!user) {
         throw new NotFoundException('Movie not founded');
       }
-      return movie;
+      return {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role.name,
+      };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -43,7 +53,15 @@ export class UsersService {
         password,
         role,
       });
-      return userAdded;
+      return {
+        message: 'User created successfully',
+        data: {
+          id: userAdded._id,
+          name: userAdded.name,
+          email: userAdded.email,
+          role: userAdded.role.name,
+        },
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

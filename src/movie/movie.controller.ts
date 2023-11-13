@@ -8,23 +8,13 @@ import {
   Delete,
   Put,
   Req,
-  // UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie-dto';
 import { Response } from 'express';
 import { Role } from 'src/auth/enums/role.enum';
-// import { Roles } from 'src/auth/decorators/roles.decorator';
-// import { AuthGuard } from 'src/auth/guards/auth.guard';
-// import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-
-interface UserRequest extends Request {
-  user: {
-    name: string;
-    role: string;
-  };
-}
+import { UserRequest } from 'src/common/interfaces/user.interfaces';
 
 @Controller('movie')
 export class MovieController {
@@ -41,6 +31,7 @@ export class MovieController {
     }
   }
 
+  @Auth([Role.ADMIN, Role.USER])
   @Get('/:id')
   async getById(@Param('id') id: string, @Res() res: Response) {
     try {
@@ -51,6 +42,7 @@ export class MovieController {
     }
   }
 
+  @Auth([Role.ADMIN, Role.USER])
   @Post()
   async createMovie(
     @Body() createMovieDto: CreateMovieDto,
@@ -64,6 +56,7 @@ export class MovieController {
     }
   }
 
+  @Auth([Role.ADMIN, Role.USER])
   @Put('/:id')
   async updateMovie(@Param() param, @Body() body, @Res() res) {
     try {
@@ -74,6 +67,7 @@ export class MovieController {
     }
   }
 
+  @Auth([Role.ADMIN, Role.USER])
   @Delete('/:id')
   async deleteMovie(@Param('id') id: string, @Res() res: Response) {
     try {
