@@ -7,6 +7,7 @@ import { HttpModule } from '@nestjs/axios';
 import { AuthModule } from 'src/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRoot(process.env.DB_URL),
     MovieModule,
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, Reflector],

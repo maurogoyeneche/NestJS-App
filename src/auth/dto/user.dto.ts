@@ -1,9 +1,20 @@
-import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { User } from 'src/models/user.schema';
 import { Role } from 'src/models/role.schema';
 
-export class CreateUserDto {
+export class Login {
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
+export class SignUp extends Login {
   name: string;
 
   @IsEmail()
@@ -17,7 +28,7 @@ export class CreateUserDto {
   role: Role;
 }
 
-export class UserResponse {
+export class UserDto {
   name: string;
   email: string;
   role: Role;

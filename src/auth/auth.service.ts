@@ -9,36 +9,17 @@ import { User } from 'src/models/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hashPassword, comparePassword } from 'src/utils/bcrypt-passwords';
-import { UserResponse } from './dto/user.dto';
+import { Login, SignUp } from './dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
-// import { Role } from 'src/models/role.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    // @InjectModel(Role.name) private roleModel: Model<Role>,
     private jwt: JwtService,
   ) {}
 
-  // async seedDefaultRoles() {
-  //   const rolesToCreate = [
-  //     { name: 'admin' },
-  //     { name: 'moderator' },
-  //     { name: 'user' },
-  //   ];
-
-  //   for (const roleData of rolesToCreate) {
-  //     const existingRole = await this.roleModel.findOne({
-  //       name: roleData.name,
-  //     });
-  //     if (!existingRole) {
-  //       await this.roleModel.create(roleData);
-  //     }
-  //   }
-  // }
-
-  async SignUp(body) {
+  async SignUp(body: SignUp) {
     try {
       const { name, email, password, role } = body;
       const hashedPassword = await hashPassword(password);
@@ -46,23 +27,19 @@ export class AuthService {
       if (userFound) {
         throw new UnauthorizedException('Email already exist');
       }
-      if (role && role !== 'admin' && role !== 'moderator' && role !== 'user') {
-        throw new BadRequestException('Invalid role');
-      }
-      const userCreated = await this.userModel.create({
+      await this.userModel.create({
         name,
         email,
         password: hashedPassword,
         role: role ? { name: role } : undefined,
       });
-      const userDto = new UserResponse(userCreated);
-      return userDto;
+      return { message: 'User created successfully' };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async Login(body) {
+  async Login(body: Login) {
     const { email, password } = body;
     try {
       const userFounded = await this.userModel.findOne({ email });
@@ -78,11 +55,7 @@ export class AuthService {
         role: userFounded.role.name,
       };
       const token = this.jwt.sign(payload);
-      const data = {
-        userFounded,
-        token,
-      };
-      return { message: 'User logged successfully', data };
+      return { message: `Logged successfully, ${userFounded.name}`, token };
     } catch (error) {
       throw new InternalServerErrorException('Authentication failed');
     }
