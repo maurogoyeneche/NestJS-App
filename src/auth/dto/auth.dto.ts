@@ -28,17 +28,4 @@ export class SignUp extends Login {
   role: Role;
 }
 
-// export class UserDto {
-//   name: string;
-//   email: string;
-//   role: Role;
 
-//   @Exclude()
-//   password: string;
-
-//   constructor(createdUser: User) {
-//     this.name = createdUser.name;
-//     this.email = createdUser.email;
-//     this.role = createdUser.role;
-//   }
-// }

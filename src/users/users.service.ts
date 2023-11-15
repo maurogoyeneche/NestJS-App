@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/users/models/user.schema';
 import { SignUp } from 'src/auth/dto/auth.dto';
+import { UpdateUserDto } from './dto/update-user';
 
 @Injectable()
 export class UsersService {
@@ -15,15 +16,13 @@ export class UsersService {
 
   async getUsers() {
     try {
-      const users = await this.userModel.find().exec();
-      return users.map((user) => ({
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      }));
+      const users = await this.userModel.find();
+      if (!users) {
+        throw new NotFoundException('User not found');
+      }
+      return users;
     } catch (error) {
-      throw new BadRequestException('Error while fetching users');
+      return { message: 'Error to update user', error };
     }
   }
 
@@ -67,22 +66,13 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: string, body) {
-    const { name, email, password } = body;
+  async updateUser(id: string, body: UpdateUserDto) {
     try {
-      const updatedUser = await this.userModel.findByIdAndUpdate(
-        id,
-        {
-          name,
-          email,
-          password,
-        },
-        {
-          new: true,
-        },
-      );
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(id, body)
+        .lean();
       if (!updatedUser) {
-        throw new NotFoundException();
+        throw new NotFoundException('ID not founded');
       }
       return {
         message: 'User updated successfully',
@@ -94,13 +84,11 @@ export class UsersService {
 
   async removeUser(id: string) {
     try {
-      const deletedUser = await this.userModel.findByIdAndDelete(id);
-      if (!deletedUser) {
+      const userDeleted = await this.userModel.findByIdAndDelete(id);
+      if (!userDeleted) {
         throw new NotFoundException();
       }
-      return {
-        message: 'User deleted successfully',
-      };
+      return userDeleted;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

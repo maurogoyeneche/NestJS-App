@@ -13,6 +13,7 @@ import { Response } from 'express';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { UserRequest } from 'src/common/interfaces/user.interfaces';
+import { UpdateUserDto } from './dto/update-user';
 
 @Controller('users')
 export class UsersController {
@@ -43,7 +44,7 @@ export class UsersController {
   @Put('/:id')
   async updateUser(
     @Param('id') id: string,
-    @Body() body,
+    @Body() body: UpdateUserDto,
     @Res() res: Response,
   ) {
     try {
@@ -55,13 +56,13 @@ export class UsersController {
   }
 
   @Auth([Role.ADMIN, Role.USER])
-  @Delete()
+  @Delete('/:id')
   async deleteUser(@Param('id') id: string, @Res() res: Response) {
     try {
       const data = await this.usersService.removeUser(id);
       return res.status(200).json({ data });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return res.status(error.status || 500).json({ message: error.message });
     }
   }
 }

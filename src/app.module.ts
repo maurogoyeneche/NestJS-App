@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { Reflector } from '@nestjs/core';
 import { MovieModule } from 'src/movie/movie.module';
 import { HttpModule } from '@nestjs/axios';
@@ -21,7 +19,7 @@ import { UsersModule } from 'src/users/users.module';
     AuthModule,
     UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, Reflector],
+  controllers: [],
+  providers: [Reflector],
 })
 export class AppModule {}

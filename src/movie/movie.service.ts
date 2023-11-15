@@ -75,7 +75,7 @@ export class MovieService {
     }
   }
 
-  async removeMovie(id) {
+  async removeMovie(id: string) {
     try {
       const movieDeleted = await this.movieModel.findByIdAndDelete(id);
       if (!movieDeleted) {
